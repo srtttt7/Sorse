@@ -4,6 +4,7 @@
   "subtitle": "iOS IPA Releases",
   "description": "Repository for IPA packages hosted on GitHub Releases",
   "website": "https://github.com/srtttt7/Sorse",
+  "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icon.png",
   "apps": [
     {
       "name": "TikDog",
@@ -11,6 +12,8 @@
       "version": "47.6.0",
       "versionDate": "2026-11-23T12:00:00Z",
       "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/TAG_NAME/TikDog_47.6.0_1795429038.ipa",
+      "iconURL": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/00/00/00/icon.png/512x512bb.jpg",
+      "size": 100000000,
       "localizedDescription": "TikDog IPA package"
     },
     {
@@ -19,6 +22,8 @@
       "version": "3.3.4",
       "versionDate": "2026-11-23T12:00:00Z",
       "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/TAG_NAME/Netflix_Genius@ffipa_3.3.4_1795428991.ipa",
+      "iconURL": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/00/00/00/icon.png/512x512bb.jpg",
+      "size": 100000000,
       "localizedDescription": "Netflix_Genius@ffipa IPA package"
     },
     {
@@ -27,6 +32,8 @@
       "version": "454.0.0",
       "versionDate": "2026-11-23T12:00:00Z",
       "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/TAG_NAME/Beegram_454.0.0_1795428983.ipa",
+      "iconURL": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/00/00/00/icon.png/512x512bb.jpg",
+      "size": 100000000,
       "localizedDescription": "Beegram IPA package"
     },
     {
@@ -35,6 +42,8 @@
       "version": "21.44.4",
       "versionDate": "2026-11-23T12:00:00Z",
       "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/TAG_NAME/YouTube_21.44.4_1795428988.ipa",
+      "iconURL": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/00/00/00/icon.png/512x512bb.jpg",
+      "size": 100000000,
       "localizedDescription": "YouTube IPA package"
     }
   ]
