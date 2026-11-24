@@ -1,0 +1,153 @@
+name: Auto Build source.json
+
+on:
+  release:
+    types: [published, edited, created, deleted]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate source.json from IPA Info.plist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          python - << 'EOF'
+          import json
+          import os
+          import plistlib
+          import re
+          import tempfile
+          import urllib.request
+          import zipfile
+
+          repo = os.environ["REPO"]
+          token = os.environ["GH_TOKEN"]
+          owner, repo_name = repo.split("/", 1)
+          branch = "main"
+          base_icon = f"https://raw.githubusercontent.com/{owner}/{repo_name}/refs/heads/{branch}"
+
+          ICONS = {
+              "com.zhiliaoapp.musically": f"{base_icon}/tiktok.png",
+              "com.chengzu.book": f"{base_icon}/netflix.png",
+              "com.burbn.instagram": f"{base_icon}/beegram.png",
+              "com.google.ios.youtube": f"{base_icon}/youtube.png",
+          }
+
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/releases/tags/apps",
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "User-Agent": "source-generator",
+              },
+          )
+          with urllib.request.urlopen(req, timeout=30) as resp:
+              release = json.loads(resp.read().decode("utf-8"))
+
+          def extract_ipa_meta(ipa_path: str) -> dict:
+              with zipfile.ZipFile(ipa_path, "r") as zf:
+                  plist_members = [
+                      name for name in zf.namelist()
+                      if re.match(r"^Payload/[^/]+\.app/Info\.plist$", name)
+                  ]
+                  if not plist_members:
+                      return {}
+                  plist_members.sort(key=len)
+                  plist_bytes = zf.read(plist_members[0])
+                  info = plistlib.loads(plist_bytes)
+
+              app_name = (
+                  info.get("CFBundleDisplayName")
+                  or info.get("CFBundleName")
+                  or ""
+              ).strip()
+              bundle_id = str(info.get("CFBundleIdentifier") or "").strip()
+              version = str(
+                  info.get("CFBundleShortVersionString")
+                  or info.get("CFBundleVersion")
+                  or ""
+              ).strip()
+
+              return {
+                  "name": app_name,
+                  "bundleIdentifier": bundle_id,
+                  "version": version,
+              }
+
+          apps_out = []
+          with tempfile.TemporaryDirectory() as tmpdir:
+              for idx, asset in enumerate(release.get("assets", [])):
+                  fname = asset.get("name", "")
+                  download_url = asset.get("browser_download_url", "")
+                  if not fname.endswith(".ipa") or not download_url:
+                      continue
+
+                  ipa_file = os.path.join(tmpdir, f"app_{idx}.ipa")
+                  dl_req = urllib.request.Request(
+                      download_url,
+                      headers={
+                          "Authorization": f"Bearer {token}",
+                          "User-Agent": "source-generator",
+                      },
+                  )
+                  with urllib.request.urlopen(dl_req, timeout=120) as dl_resp, open(ipa_file, "wb") as out_f:
+                      while True:
+                          chunk = dl_resp.read(1024 * 1024)
+                          if not chunk:
+                              break
+                          out_f.write(chunk)
+
+                  meta = extract_ipa_meta(ipa_file)
+                  fallback_name = fname.split("_")[0]
+                  app_name = meta.get("name") or fallback_name
+                  bundle_id = meta.get("bundleIdentifier") or f"com.{owner}.{fallback_name.lower()}"
+                  version = meta.get("version") or "1.0.0"
+
+                  apps_out.append(
+                      {
+                          "name": app_name,
+                          "bundleIdentifier": bundle_id,
+                          "version": version,
+                          "versionDate": asset.get("updated_at", "2026-11-23T12:00:00Z"),
+                          "downloadURL": download_url,
+                          "iconURL": ICONS.get(bundle_id, f"{base_icon}/icon.png"),
+                          "size": int(asset.get("size", 0)),
+                          "localizedDescription": f"{app_name} IPA package",
+                      }
+                  )
+
+          source_data = {
+              "name": "SRT STORE",
+              "identifier": f"com.{owner}.{repo_name.lower()}.repo",
+              "subtitle": "iOS IPA Releases",
+              "description": "Repository for IPA packages hosted on GitHub Releases",
+              "website": f"https://github.com/{owner}/{repo_name}",
+              "iconURL": f"{base_icon}/icon.png",
+              "apps": apps_out,
+          }
+
+          with open("source.json", "w", encoding="utf-8") as f:
+              json.dump(source_data, f, indent=2, ensure_ascii=False)
+          EOF
+
+      - name: Commit and push source.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add source.json
+          git diff --staged --quiet || git commit -m "Auto update source.json from Info.plist"
+          git push
