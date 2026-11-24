@@ -7,43 +7,43 @@
   "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icon.png",
   "apps": [
     {
-      "name": "TikDog",
-      "bundleIdentifier": "com.zhiliaoapp.musically",
-      "version": "47.6.0",
-      "versionDate": "2026-11-23T12:00:00Z",
-      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/TikDog_47.6.0_1795429038.ipa",
-      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/tiktok.png",
-      "size": 0,
-      "localizedDescription": "TikDog IPA package"
+      "name": "Beegram",
+      "bundleIdentifier": "com.burbn.instagram",
+      "version": "454.0.0",
+      "versionDate": "2026-11-23T10:08:05Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/Beegram_3.9.1.ipa",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/beegram.png",
+      "size": 415470119,
+      "localizedDescription": "Beegram IPA package"
     },
     {
       "name": "Netflix_Genius@ffipa",
       "bundleIdentifier": "com.chengzu.book",
       "version": "3.3.4",
-      "versionDate": "2026-11-23T12:00:00Z",
-      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/Netflix_Genius%40ffipa_3.3.4_1795428991.ipa",
+      "versionDate": "2026-11-23T10:02:28Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/Netflix_Genius%40ffipa-3.3.4.ipa",
       "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/netflix.png",
-      "size": 0,
+      "size": 35518315,
       "localizedDescription": "Netflix_Genius@ffipa IPA package"
     },
     {
-      "name": "Beegram",
-      "bundleIdentifier": "com.burbn.instagram",
-      "version": "454.0.0",
-      "versionDate": "2026-11-23T12:00:00Z",
-      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/Beegram_454.0.0_1795428983.ipa",
-      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/beegram.png",
-      "size": 0,
-      "localizedDescription": "Beegram IPA package"
+      "name": "TikDog",
+      "bundleIdentifier": "com.zhiliaoapp.musically",
+      "version": "47.6.0",
+      "versionDate": "2026-11-23T10:06:07Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/TikDog_b.2.ipa",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/tiktok.png",
+      "size": 496995336,
+      "localizedDescription": "TikDog IPA package"
     },
     {
       "name": "YouTube",
       "bundleIdentifier": "com.google.ios.youtube",
       "version": "21.44.4",
-      "versionDate": "2026-11-23T12:00:00Z",
-      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/YouTube_21.44.4_1795428988.ipa",
+      "versionDate": "2026-11-23T10:03:55Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/YouPro_1.3.4.ipa",
       "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/youtube.png",
-      "size": 0,
+      "size": 153682433,
       "localizedDescription": "YouTube IPA package"
     }
   ]
