@@ -4,8 +4,18 @@
   "subtitle": "iOS IPA Releases",
   "description": "Repository for IPA packages hosted on GitHub Releases",
   "website": "https://github.com/srtttt7/Sorse",
-  "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/beegram.png",
+  "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/1257-nagram_13_1_1_lead_2_0_3_ipavault_ipa.png",
   "apps": [
+    {
+      "name": "Nagram",
+      "bundleIdentifier": "xyz.nextalone.nagram",
+      "version": "13.1.1",
+      "versionDate": "2026-11-24T09:42:29Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/1257-Nagram.13.1.1.Lead.2.0.3.%40ipavault.ipa",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/1257-nagram_13_1_1_lead_2_0_3_ipavault_ipa.png",
+      "size": 131155766,
+      "localizedDescription": "Nagram IPA package"
+    },
     {
       "name": "Beegram",
       "bundleIdentifier": "com.burbn.instagram",
@@ -15,6 +25,16 @@
       "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/beegram.png",
       "size": 415470119,
       "localizedDescription": "Beegram IPA package"
+    },
+    {
+      "name": "HITV PRO",
+      "bundleIdentifier": "com.cinee.trend1",
+      "version": "1.1.2",
+      "versionDate": "2026-11-24T09:44:58Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/HITV.PRO.ipa",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/hitv_pro_ipa.png",
+      "size": 20618799,
+      "localizedDescription": "HITV PRO IPA package"
     },
     {
       "name": "Netflix_Genius@ffipa",
@@ -27,6 +47,26 @@
       "localizedDescription": "Netflix_Genius@ffipa IPA package"
     },
     {
+      "name": "Snapchat",
+      "bundleIdentifier": "com.toyopagroup.picaboo",
+      "version": "13.68.1",
+      "versionDate": "2026-11-24T09:44:52Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/Snapchat_Nobel.ipa",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/snapchat.png",
+      "size": 213928164,
+      "localizedDescription": "Snapchat IPA package"
+    },
+    {
+      "name": "Teledark",
+      "bundleIdentifier": "app.teledark",
+      "version": "13.0",
+      "versionDate": "2026-11-24T09:43:10Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/Teledark_13.ipa",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/teledark.png",
+      "size": 87995375,
+      "localizedDescription": "Teledark IPA package"
+    },
+    {
       "name": "TikDog",
       "bundleIdentifier": "com.zhiliaoapp.musically",
       "version": "47.6.0",
@@ -35,6 +75,16 @@
       "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/tikdog.png",
       "size": 496995336,
       "localizedDescription": "TikDog IPA package"
+    },
+    {
+      "name": "‎WhatsApp",
+      "bundleIdentifier": "net.whatsapp.WhatsApp",
+      "version": "26.43.75",
+      "versionDate": "2026-11-24T09:43:57Z",
+      "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/WGold_4.0.ipa",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/wgold.png",
+      "size": 179227112,
+      "localizedDescription": "‎WhatsApp IPA package"
     },
     {
       "name": "YouTube",
