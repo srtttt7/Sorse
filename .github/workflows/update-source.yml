@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Generate source.json from IPA Info.plist
+      - name: Generate source.json and extract icons from IPA
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -38,14 +38,10 @@ jobs:
           token = os.environ["GH_TOKEN"]
           owner, repo_name = repo.split("/", 1)
           branch = "main"
-          base_icon = f"https://raw.githubusercontent.com/{owner}/{repo_name}/refs/heads/{branch}"
+          base_raw = f"https://raw.githubusercontent.com/{owner}/{repo_name}/refs/heads/{branch}"
 
-          ICONS = {
-              "com.zhiliaoapp.musically": f"{base_icon}/tiktok.png",
-              "com.chengzu.book": f"{base_icon}/netflix.png",
-              "com.burbn.instagram": f"{base_icon}/beegram.png",
-              "com.google.ios.youtube": f"{base_icon}/youtube.png",
-          }
+          icons_dir = "icons"
+          os.makedirs(icons_dir, exist_ok=True)
 
           req = urllib.request.Request(
               f"https://api.github.com/repos/{repo}/releases/tags/apps",
@@ -58,37 +54,100 @@ jobs:
           with urllib.request.urlopen(req, timeout=30) as resp:
               release = json.loads(resp.read().decode("utf-8"))
 
-          def extract_ipa_meta(ipa_path: str) -> dict:
-              with zipfile.ZipFile(ipa_path, "r") as zf:
-                  plist_members = [
-                      name for name in zf.namelist()
-                      if re.match(r"^Payload/[^/]+\.app/Info\.plist$", name)
+          def pick_icon_from_zip(zf: zipfile.ZipFile, app_prefix: str, info: dict) -> bytes | None:
+              candidates = []
+
+              # 1) محاولة قراءة أسماء الأيقونات من CFBundleIcons
+              bundle_icons = info.get("CFBundleIcons") or {}
+              primary_icon = (bundle_icons.get("CFBundlePrimaryIcon") or {})
+              icon_files = list(primary_icon.get("CFBundleIconFiles") or [])
+              icon_name = primary_icon.get("CFBundleIconName")
+              if icon_name:
+                  icon_files.append(str(icon_name))
+
+              png_entries = [
+                  name for name in zf.namelist()
+                  if name.startswith(app_prefix) and name.lower().endswith(".png")
+              ]
+
+              for raw_icon in icon_files:
+                  clean_icon = str(raw_icon).removesuffix(".png").lower()
+                  for entry in png_entries:
+                      base_entry = os.path.basename(entry).lower()
+                      if base_entry.startswith(clean_icon):
+                          candidates.append(entry)
+
+              # 2) إذا لم نجد تطابقاً مباشراً، نبحث عن أيقونات AppIcon أو أكبر ملفات PNG داخل .app
+              if not candidates:
+                  appicon_entries = [
+                      e for e in png_entries
+                      if "appicon" in os.path.basename(e).lower() or "icon" in os.path.basename(e).lower()
                   ]
+                  pool = appicon_entries if appicon_entries else png_entries
+                  pool_sorted = sorted(pool, key=lambda n: zf.getinfo(n).file_size, reverse=True)
+                  candidates.extend(pool_sorted[:5])
+
+              # نختار الأكبر حجماً من المرشحين لضمان دقة عالية
+              unique_candidates = []
+              seen = set()
+              for c in candidates:
+                  if c not in seen:
+                      seen.add(c)
+                      unique_candidates.append(c)
+
+              if not unique_candidates:
+                  return None
+
+              best_entry = max(unique_candidates, key=lambda n: zf.getinfo(n).file_size)
+              return zf.read(best_entry)
+
+          def extract_ipa_meta_and_icon(ipa_path: str, slug: str) -> dict:
+              with zipfile.ZipFile(ipa_path, "r") as zf:
+                  plist_members = sorted(
+                      [
+                          name for name in zf.namelist()
+                          if re.match(r"^Payload/[^/]+\.app/Info\.plist$", name)
+                      ],
+                      key=len,
+                  )
                   if not plist_members:
                       return {}
-                  plist_members.sort(key=len)
-                  plist_bytes = zf.read(plist_members[0])
-                  info = plistlib.loads(plist_bytes)
 
-              app_name = (
-                  info.get("CFBundleDisplayName")
-                  or info.get("CFBundleName")
-                  or ""
-              ).strip()
-              bundle_id = str(info.get("CFBundleIdentifier") or "").strip()
-              version = str(
-                  info.get("CFBundleShortVersionString")
-                  or info.get("CFBundleVersion")
-                  or ""
-              ).strip()
+                  plist_path = plist_members[0]
+                  app_prefix = plist_path.rsplit("Info.plist", 1)[0]
+                  info = plistlib.loads(zf.read(plist_path))
+
+                  app_name = (
+                      info.get("CFBundleDisplayName")
+                      or info.get("CFBundleName")
+                      or ""
+                  ).strip()
+                  bundle_id = str(info.get("CFBundleIdentifier") or "").strip()
+                  version = str(
+                      info.get("CFBundleShortVersionString")
+                      or info.get("CFBundleVersion")
+                      or ""
+                  ).strip()
+
+                  icon_bytes = pick_icon_from_zip(zf, app_prefix, info)
+                  icon_url = f"{base_raw}/icon.png"
+                  if icon_bytes:
+                      icon_filename = f"{slug}.png"
+                      icon_path = os.path.join(icons_dir, icon_filename)
+                      with open(icon_path, "wb") as img_f:
+                          img_f.write(icon_bytes)
+                      icon_url = f"{base_raw}/{icons_dir}/{icon_filename}"
 
               return {
                   "name": app_name,
                   "bundleIdentifier": bundle_id,
                   "version": version,
+                  "iconURL": icon_url,
               }
 
           apps_out = []
+          first_icon_url = f"{base_raw}/icon.png"
+
           with tempfile.TemporaryDirectory() as tmpdir:
               for idx, asset in enumerate(release.get("assets", [])):
                   fname = asset.get("name", "")
@@ -111,11 +170,17 @@ jobs:
                               break
                           out_f.write(chunk)
 
-                  meta = extract_ipa_meta(ipa_file)
                   fallback_name = fname.split("_")[0]
+                  safe_slug = re.sub(r"[^a-zA-Z0-9_-]+", "_", fallback_name).strip("_").lower() or f"app_{idx}"
+                  meta = extract_ipa_meta_and_icon(ipa_file, safe_slug)
+
                   app_name = meta.get("name") or fallback_name
-                  bundle_id = meta.get("bundleIdentifier") or f"com.{owner}.{fallback_name.lower()}"
+                  bundle_id = meta.get("bundleIdentifier") or f"com.{owner}.{safe_slug}"
                   version = meta.get("version") or "1.0.0"
+                  icon_url = meta.get("iconURL") or f"{base_raw}/icon.png"
+
+                  if idx == 0 and icon_url:
+                      first_icon_url = icon_url
 
                   apps_out.append(
                       {
@@ -124,7 +189,7 @@ jobs:
                           "version": version,
                           "versionDate": asset.get("updated_at", "2026-11-23T12:00:00Z"),
                           "downloadURL": download_url,
-                          "iconURL": ICONS.get(bundle_id, f"{base_icon}/icon.png"),
+                          "iconURL": icon_url,
                           "size": int(asset.get("size", 0)),
                           "localizedDescription": f"{app_name} IPA package",
                       }
@@ -136,7 +201,7 @@ jobs:
               "subtitle": "iOS IPA Releases",
               "description": "Repository for IPA packages hosted on GitHub Releases",
               "website": f"https://github.com/{owner}/{repo_name}",
-              "iconURL": f"{base_icon}/icon.png",
+              "iconURL": first_icon_url,
               "apps": apps_out,
           }
 
@@ -144,10 +209,10 @@ jobs:
               json.dump(source_data, f, indent=2, ensure_ascii=False)
           EOF
 
-      - name: Commit and push source.json
+      - name: Commit and push source.json and icons
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add source.json
-          git diff --staged --quiet || git commit -m "Auto update source.json from Info.plist"
+          git add source.json icons
+          git diff --staged --quiet || git commit -m "Auto update source.json and extract IPA icons"
           git push
