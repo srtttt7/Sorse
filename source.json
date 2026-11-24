@@ -4,7 +4,7 @@
   "subtitle": "iOS IPA Releases",
   "description": "Repository for IPA packages hosted on GitHub Releases",
   "website": "https://github.com/srtttt7/Sorse",
-  "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icon.png",
+  "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/beegram.png",
   "apps": [
     {
       "name": "Beegram",
@@ -12,7 +12,7 @@
       "version": "454.0.0",
       "versionDate": "2026-11-23T10:08:05Z",
       "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/Beegram_3.9.1.ipa",
-      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/beegram.png",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/beegram.png",
       "size": 415470119,
       "localizedDescription": "Beegram IPA package"
     },
@@ -22,7 +22,7 @@
       "version": "3.3.4",
       "versionDate": "2026-11-23T10:02:28Z",
       "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/Netflix_Genius%40ffipa-3.3.4.ipa",
-      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/netflix.png",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/netflix.png",
       "size": 35518315,
       "localizedDescription": "Netflix_Genius@ffipa IPA package"
     },
@@ -32,7 +32,7 @@
       "version": "47.6.0",
       "versionDate": "2026-11-23T10:06:07Z",
       "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/TikDog_b.2.ipa",
-      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/tiktok.png",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/tikdog.png",
       "size": 496995336,
       "localizedDescription": "TikDog IPA package"
     },
@@ -42,7 +42,7 @@
       "version": "21.44.4",
       "versionDate": "2026-11-23T10:03:55Z",
       "downloadURL": "https://github.com/srtttt7/Sorse/releases/download/apps/YouPro_1.3.4.ipa",
-      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/youtube.png",
+      "iconURL": "https://raw.githubusercontent.com/srtttt7/Sorse/refs/heads/main/icons/youpro.png",
       "size": 153682433,
       "localizedDescription": "YouTube IPA package"
     }
